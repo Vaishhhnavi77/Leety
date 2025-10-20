@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Leetly",
+    "version": "1.0",
+    "description": "ADD DESCRIPTION HERE QUICKLY",
+    "host_permissions": ["https://leetcode.com/*"],
+    "permissions": ["activeTab", "scripting", "sidePanel", "tabs", "storage"],
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://leetcode.com/problems/*"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
+    ]
+}
