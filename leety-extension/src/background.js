@@ -64,6 +64,49 @@ async function getGeminiResponse(apiKey, data, userPrompt) {
   }
 }
 
+async function updateSidePanel(tabId) {
+  try {
+    const tab = await chrome.tabs.get(tabId);
+    if (!tab || !tab.url) {
+      // Disable for tabs with no URL (e.g., new tab page)
+      await chrome.sidePanel.setOptions({
+        tabId: tabId,
+        enabled: false
+      });
+      return;
+    }
+
+    if (tab.url.startsWith("https://leetcode.com/problems/")) {
+      // Enable the side panel for LeetCode tabs
+      await chrome.sidePanel.setOptions({
+        tabId: tabId,
+        path: "index.html", // Set the path for this tab
+        enabled: true
+      });
+    } else {
+      // Disable the side panel for all other tabs
+      await chrome.sidePanel.setOptions({
+        tabId: tabId,
+        enabled: false
+      });
+    }
+  } catch (error) {
+    console.error(`Error updating side panel for tab ${tabId}:`, error);
+  }
+}
+
+// When a tab is updated (e.g., user navigates to a new page)
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  // We only need to run this when the URL changes or the page is fully loaded
+  if (changeInfo.url || changeInfo.status === 'complete') {
+    updateSidePanel(tabId);
+  }
+});
+
+// When the user switches to a different active tab
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  updateSidePanel(activeInfo.tabId);
+});
 
 async function verifyApiKey(apiKey) {
     // Using a lightweight endpoint to check for validity.

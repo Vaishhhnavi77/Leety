@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import showdown from 'showdown';
+import { SpinnerDiamond } from 'spinners-react';
 
 // Initialize the markdown converter with some options
 const converter = new showdown.Converter({
@@ -19,6 +20,8 @@ function App() {
   // State for managing chat messages and user input
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
+  // State to specifically track when the bot is generating a response
+  const [isBotReplying, setIsBotReplying] = useState(false);
   
   // Ref to control the scrolling of the chat area
   const chatAreaRef = useRef(null);
@@ -40,16 +43,15 @@ function App() {
     });
   }, []);
   
-  // Whenever new messages are added, scroll to the bottom of the chat
+  // Whenever new messages are added or the bot starts replying, scroll to the bottom
   useEffect(() => {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isBotReplying]);
 
   // --- Handler Functions ---
 
-  // Handles verifying and saving the API key
   const handleSaveApiKey = async () => {
     const keyToVerify = document.getElementById('api-key-input')?.value;
     if (!keyToVerify) {
@@ -78,19 +80,15 @@ function App() {
     }
   };
   
-  // Handles sending a user's message to the backend
   const handleSendMessage = async () => {
-      if (!userInput.trim()) return;
+      if (!userInput.trim() || isBotReplying) return;
 
-      // Add user message to the chat and clear input
-      setMessages(prev => [...prev, { sender: 'user', text: userInput, isHtml: false }]);
       const currentPrompt = userInput;
+      setMessages(prev => [...prev, { sender: 'user', text: currentPrompt, isHtml: false }]);
       setUserInput('');
-
-      // Add a temporary loading message for the bot
-      setMessages(prev => [...prev, { sender: 'bot', text: '...', isHtml: false, id: Date.now() }]);
-      const loadingMessageId = Date.now();
-
+      
+      // Set replying state to true to show the spinner
+      setIsBotReplying(true);
 
       try {
           const response = await chrome.runtime.sendMessage({ type: "chat", userPrompt: currentPrompt });
@@ -98,18 +96,16 @@ function App() {
 
           const botResponse = response.error ? `<p class="text-red-500">${response.error}</p>` : converter.makeHtml(response.output);
           
-          setMessages(prev => prev.map(msg => 
-            (msg.text === '...') ? { ...msg, text: botResponse, isHtml: true } : msg
-          ));
+          setMessages(prev => [...prev, { sender: 'bot', text: botResponse, isHtml: true }]);
 
       } catch (error) {
-           setMessages(prev => prev.map(msg => 
-            (msg.text === '...') ? { ...msg, text: `<p class="text-red-500">Error: ${error.message}</p>`, isHtml: true } : msg
-          ));
+           setMessages(prev => [...prev, { sender: 'bot', text: `<p class="text-red-500">Error: ${error.message}</p>`, isHtml: true }]);
+      } finally {
+          // Set replying state to false to hide the spinner
+          setIsBotReplying(false);
       }
   };
 
-  // Handles the 'Enter' key press in the textarea
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
@@ -117,7 +113,6 @@ function App() {
     }
   };
   
-  // Tailwind classes for styling markdown content from showdown
   const botMessageStyles = `
     prose prose-invert prose-sm max-w-none 
     prose-p:m-0 prose-headings:my-2 
@@ -155,7 +150,7 @@ function App() {
 
       <div className={`flex flex-col h-screen w-full bg-gray-800 text-gray-200 ${isModalOpen ? 'blur-sm pointer-events-none' : ''}`}>
         <div className="flex-grow flex flex-col p-4 overflow-y-auto gap-4" ref={chatAreaRef}>
-          {messages.length === 0 ? (
+          {messages.length === 0 && !isBotReplying ? (
             <div className="flex flex-col items-center justify-center gap-4 text-center m-auto">
               <span className="text-5xl">👋</span>
               <p className="text-gray-400">Welcome to Leety! How can I help you today?</p>
@@ -173,6 +168,14 @@ function App() {
                     </div>
                 </div>
               ))}
+              {/* This block now renders the spinner when the bot is replying */}
+              {isBotReplying && (
+                 <div className="flex justify-start">
+                    <div className="p-3 rounded-lg bg-gray-700">
+                      <SpinnerDiamond size={32} thickness={103} speed={100} color="rgba(144, 57, 172, 1)" secondaryColor="rgba(57, 69, 172, 0.61)" />
+                    </div>
+                 </div>
+              )}
             </div>
           )}
         </div>
@@ -185,6 +188,7 @@ function App() {
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            disabled={isBotReplying} // Disable input while bot is replying
           ></textarea>
         </div>
       </div>
@@ -193,3 +197,4 @@ function App() {
 }
 
 export default App;
+

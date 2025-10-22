@@ -5,17 +5,20 @@
     "description": "ADD DESCRIPTION HERE QUICKLY",
     "host_permissions": ["https://leetcode.com/*"],
     "permissions": ["activeTab", "scripting", "sidePanel", "tabs", "storage"],
-    "side_panel": {
-        "default_path": "index.html"
-    },
+
     "background": {
         "service_worker": "background.js"
     },
     "content_scripts": [
         {
             "matches": ["https://leetcode.com/problems/*"],
-            "js": ["content.js"],
-            "run_at": "document_end"
+            "js": ["content.js"]
         }
-    ]
+    ],
+    "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+    }
+
 }
