@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import showdown from 'showdown';
 import { SpinnerDiamond } from 'spinners-react';
-
+import { getGeminiResponse } from "./api/gemini";
 // Initialize the markdown converter
 const converter = new showdown.Converter({
   tables: true,
@@ -159,7 +159,7 @@ function App() {
 
     try {
       const response = await new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ type: "chat", userPrompt: currentPrompt }, (response) => {
+        chrome.runtime.sendMessage({ type: "getPageContent"}, (response) => {
           if (chrome.runtime.lastError) {
             reject(new Error(chrome.runtime.lastError.message));
           } else {
@@ -175,7 +175,9 @@ function App() {
           isHtml: true
         }]);
       } else {
-        const botResponse = response.output || 'No response received from the server.';
+        const geminiResponse = await getGeminiResponse(response.apiKey, response.dataResponse.data, currentPrompt);
+
+        const botResponse = geminiResponse.candidates[0].content.parts[0].text || 'No response received from the server.';
         setMessages(prev => [...prev, {
           sender: 'bot',
           text: botResponse,
