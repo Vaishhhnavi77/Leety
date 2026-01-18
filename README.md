@@ -34,7 +34,7 @@ It helps you **understand, debug, and improve your solutions step by step**.
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/leety.git
-   cd leety
+   cd Leety/leety-extension
 2. Install dependencies:
     `npm install`
 3. Build the extension:
