@@ -69,7 +69,7 @@ Leety requires a **Google Gemini API key**.
 ## Demo
 
 <section>
-  <h2>Demo</h2>
+
   <p>
     Short demo showing how Leety helps understand the intuition behind
     a real LeetCode problem (Two Sum):
