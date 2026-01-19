@@ -68,19 +68,10 @@ Leety requires a **Google Gemini API key**.
 
 ## Demo
 
-<section>
+[Watch the demo video](leety-extension/src/assets/leetyDemo.mp4)
 
-  <p>
-    Short demo showing how Leety helps understand the intuition behind
-    a real LeetCode problem (Two Sum):
-  </p>
 
-  <img
-    src="src/assets/Demo.gif"
-    alt="Leety Two Sum Demo"
-    style="max-width: 100%; height: auto;"
-  />
-</section>
+
 
 ---
 ## License
