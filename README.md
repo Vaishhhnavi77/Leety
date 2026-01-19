@@ -66,7 +66,8 @@ Leety requires a **Google Gemini API key**.
 - **Markdown Rendering:** `react-markdown`
 - **Syntax Highlighting:** `react-syntax-highlighter`
 
-[Watch the demo video](leety-extension/src/assets/leetyDemo.mp4)
+![Leety Extension Demo](leety-extension/src/assets/leetyDemo3.gif)
+
 
 
 
