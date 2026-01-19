@@ -74,11 +74,12 @@ Leety requires a **Google Gemini API key**.
   </p>
 
   <img
-    src="leety-extension/src/assets/Demo.gif"
+    src="leety-extension/src/assets/leetyDemo.mp4"
     alt="Leety Two Sum Demo"
     style="max-width: 100%; height: auto;"
   />
 </section>
+
 
 
 ---
