@@ -81,9 +81,10 @@ Leety requires a **Google Gemini API key**.
     loop
     style="max-width: 100%; height: auto;"
   >
-   
+    Your browser does not support the video tag.
   </video>
 </section>
+
 
 
 
