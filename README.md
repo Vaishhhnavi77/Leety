@@ -66,19 +66,25 @@ Leety requires a **Google Gemini API key**.
 - **Markdown Rendering:** `react-markdown`
 - **Syntax Highlighting:** `react-syntax-highlighter`
 
-- <section>
+<section>
   <h2>Demo</h2>
   <p>
     Short demo showing how Leety helps understand the intuition behind
     a real LeetCode problem (Two Sum):
   </p>
 
-  <img
+  <video
     src="leety-extension/src/assets/leetyDemo.mp4"
-    alt="Leety Two Sum Demo"
+    controls
+    autoplay
+    muted
+    loop
     style="max-width: 100%; height: auto;"
-  />
+  >
+   
+  </video>
 </section>
+
 
 
 
