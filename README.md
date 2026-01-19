@@ -74,7 +74,7 @@ Leety requires a **Google Gemini API key**.
   </p>
 
   <img
-    src="src/assets/LeetyTwoSumDemo.gif"
+    src="leety-extension/src/assets/Demo.gif"
     alt="Leety Two Sum Demo"
     style="max-width: 100%; height: auto;"
   />
